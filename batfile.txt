@@ -1,0 +1,2 @@
+streaming_extractor_music.exe "01-PeopleStuff-Whistles.wav" "PeopleStuff-Whistles-Whistles.json"
+streaming_extractor_music.exe "02-PeopleStuff-Out Of Breath.wav" "PeopleStuff-Whistles-Out Of Breath.json"

@@ -13,7 +13,6 @@
 # specific directory and use it to find all subdirectories of MUSIC/
 
 library("stringr")
-# help("stringr")
 
 music.directories <- list.dirs("Music")
 
@@ -24,32 +23,28 @@ album_subdirectories <- music.directories[num_slashes==2]
 
 # Step 3: For each album subdirectory, complete the following tasks
 
-#WILL ADD A FOR LOOP HERE
-
-#test file for now
-  test.album <- album_subdirectories[1]
+for (album.sub in album_subdirectories) {
   
   #substep 1: list all files in the album subdirectory
-  all.files <- list.files(test.album, recursive=TRUE)
+  all.files <- list.files(album.sub, recursive=TRUE)
     
   #substep 2: filter all .WAV files
   wav_count <- str_count(all.files, "\\.wav")
   wav_file_indicies <- which(wav_count > 0)
   wav_files <- all.files[wav_file_indicies]
   
-    #substep 3: process each .WAV file
-    code.to.procesess <- c() #initialize empty vector
+  #substep 3: process each .WAV file
+  code.to.process <- c() #initialize empty vector
     
-    test.file <- wav_files[1]
-    # WILL ADD ANOTHER FOR LOOP HERE
+  for (wav.file in wav_files) {
     
     # (a) create an object containing the track file location
-    track_file_location <- paste(test.album, "/", test.file, sep = "")
+    track_file_location <- paste(album.sub, "/", test.file, sep = "")
     
     # (b) create an object containing the current track's filename
-    track_name <- str_sub(test.file, start=1, end=str_length(test.file) - 4)  # Remove '.WAV'
+    track_name <- str_sub(wav.file, start=1, end=str_length(wav.file) - 4)  # Remove '.WAV'
     track_name_parts <- str_split(track_name, "-", simplify=TRUE)
-    album_parts <- str_split(test.album, "/", simplify=TRUE)
+    album_parts <- str_split(album.sub, "/", simplify=TRUE)
     # (c) desired output file
     artist <- track_name_parts[2]
     album <- album_parts[3]
@@ -58,8 +53,14 @@ album_subdirectories <- music.directories[num_slashes==2]
     output_filename <- paste(artist,"-",album,"-", track, ".json", sep = "")
     
     # (d) create command line prompt
-    command <- paste("streaming_extractor.exe", test.file, output_filename)
+    command <- paste("streaming_extractor_music.exe", " ", '"', wav.file, '"', " ", '"',output_filename, '"', sep="")
     
-    code.to.procesess <- c(code.to.procesess, command)
-
+    code.to.process <- c(code.to.process, command)
+  }
+}
 # Step 4: write the code.to.process vector to a .txt file
+writeLines(code.to.process, "batfile.txt")
+
+##############################################################################
+# Task 2: Process JSON Output
+##############################################################################
