@@ -21,11 +21,15 @@ music.directories <- list.dirs("Music")
 num_slashes <- str_count(music.directories, "/")
 album_subdirectories <- music.directories[num_slashes==2]
 
+code.to.process <- c() #initialize empty vector
+
 # Step 3: For each album subdirectory, complete the following tasks
 
-for (album.sub in album_subdirectories) {
-  
+for (album.sub in 1:length(album_subdirectories)) {
   #substep 1: list all files in the album subdirectory
+  
+  album.sub <- album_subdirectories[album.sub]
+  
   all.files <- list.files(album.sub, recursive=TRUE)
     
   #substep 2: filter all .WAV files
@@ -34,12 +38,11 @@ for (album.sub in album_subdirectories) {
   wav_files <- all.files[wav_file_indicies]
   
   #substep 3: process each .WAV file
-  code.to.process <- c() #initialize empty vector
+  for (wav.file in 1:length(wav_files)) {
     
-  for (wav.file in wav_files) {
-    
-    # (a) create an object containing the track file location
-    track_file_location <- paste(album.sub, "/", test.file, sep = "")
+    wav.file <- wav_files[wav.file]
+    # (a) create an object containin)g the track file location
+    track_file_location <- paste(album.sub, "/", wav.file, sep = "")
     
     # (b) create an object containing the current track's filename
     track_name <- str_sub(wav.file, start=1, end=str_length(wav.file) - 4)  # Remove '.WAV'
@@ -64,3 +67,6 @@ writeLines(code.to.process, "batfile.txt")
 ##############################################################################
 # Task 2: Process JSON Output
 ##############################################################################
+
+install.packages("jsonlite")
+library("jsonlite")
