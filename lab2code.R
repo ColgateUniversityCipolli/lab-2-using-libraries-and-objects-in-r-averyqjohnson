@@ -22,6 +22,7 @@ num_slashes <- str_count(music.directories, "/")
 album_subdirectories <- music.directories[num_slashes==2]
 
 code.to.process <- c() #initialize empty vector
+output.file <- c() # initialize output filename 
 
 # Step 3: For each album subdirectory, complete the following tasks
 
@@ -54,6 +55,7 @@ for (album.sub in 1:length(album_subdirectories)) {
     track<- track_name_parts[3]
     
     output_filename <- paste(artist,"-",album,"-", track, ".json", sep = "")
+    output.file <- c(output.file, output_filename)
     
     # (d) create command line prompt
     command <- paste("streaming_extractor_music.exe", " ", '"', wav.file, '"', " ", '"',output_filename, '"', sep="")
@@ -68,5 +70,27 @@ writeLines(code.to.process, "batfile.txt")
 # Task 2: Process JSON Output
 ##############################################################################
 
-install.packages("jsonlite")
+# Step 0: Install the jsonlite package for R
 library("jsonlite")
+library("stringr")
+
+# Step 1: extract the artists, album, and track from the file name
+for (file in 1:length(output.file)){
+  current_file <- output.file[file]
+  output_filename_parts <- str_split(current_file, "-", simplify=TRUE)
+  artist.task2 <- output_filename_parts[1]
+  album.task2 <- output_filename_parts[2]
+  track.task2 <- output_filename_parts[3]
+  
+  # Step 2: Load the JSON file into R
+  json_data <- fromJSON(current_file)
+  
+  #Stpe 3: Extract desired information from JSON data
+  average_loudness <- json_data$loudness
+  mean_spectral_energy <- json_data$spectral_energy$mean
+  danceability <- json_data$danceability
+  bpm <- json_data$bpm
+  key_key <- json_data$key
+  key_scale <- json_data$key_scale
+  length <- json_data$length
+}
